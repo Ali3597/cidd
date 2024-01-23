@@ -18,12 +18,19 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          name: model-training
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+         python-version: '3.x'
+      - name: Train model
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           pip install -r requirements.txt
           pip install --upgrade pip
           python train.py
-          npm install -g @dvcorg/cml
-          echo "## Model metrics" > report.md
-          cat metrics.txt >> report.md
-          echo '![](./feature_importance.png "feature")' >> report.md
-          echo '![](./residuals.png "feature")' >> report.md
-          cml comment create report.md
